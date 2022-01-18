@@ -10,9 +10,23 @@ app.get('/',(req,res)=>{
 })
 
 // post new data in merarki
-app.post('/api/saral',(req,res)=>{
-    console.log(res)
-    const newSaral={
+app.post('/api/saral/',(req,res)=>{
+
+    if(!req.body.name||
+        !req.body.logo||
+        !req.body.days_to_complete||
+        !req.body.short_description||
+        !req.body.type ||
+        !req.body.lang_available) {
+            
+            res.status(400).json({
+                success:0,
+                message:'Check if all fields are provided and are valid'
+            })
+
+    }else{
+        console.log(res)
+        const newSaral={
           id:merarki.length+1,
           name:req.body.name,
           logo:req.body.logo,
@@ -26,12 +40,30 @@ app.post('/api/saral',(req,res)=>{
     merarki.push(newSaral)
     fs.writeFileSync('./config/saral.json',JSON.stringify(merarki,null,5))
     res.send({message:'New data added succsfully',newSaral})
+        
+    }
+
+    
 })
 
 
 // update merarki data by id
 app.put('/api/saral/:id',(req,res)=>{
-    let id=req.params.id
+
+    if(!req.body.name||
+        !req.body.logo||
+        !req.body.days_to_complete||
+        !req.body.short_description||
+        !req.body.type ||
+        !req.body.lang_available) {
+            
+            res.status(400).json({
+                success:0,
+                message:'Check if all fields are provided and are valid'
+            })
+
+    }else{
+        let id=req.params.id
     let name=req.body.name
     let logo=req.body.logo
     let notes=req.body.notes
@@ -62,6 +94,9 @@ if(index>=0){
 
     
 }
+
+    }
+    
 })
 
 // delete merarki data by id
@@ -76,7 +111,10 @@ app.delete('/api/saral/:id',(req,res)=>{
         fs.writeFileSync('./config/saral.json',JSON.stringify(merarki,null,5))
         res.send({message:'deleted succsfully',detele:srl})
     }else{
-        res.json(404)
+        res.status(404).json({
+            message:`${id} Already deleted`,
+            
+        })
     }
 
 })
